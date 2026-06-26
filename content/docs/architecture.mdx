@@ -1,0 +1,53 @@
+---
+title: Architecture
+description: Overview of the project structure and architectural decisions.
+---
+
+## Project Structure
+
+The codebase follows the Next.js App Router conventions with a strict separation of concerns for the Indian financial domain.
+
+```text
+├── content/
+│   └── docs/            # Developer documentation (MDX)
+├── docs/                # Project spec & AI context
+├── prisma/              # Database schema (SQLite)
+├── src/
+│   ├── app/             # Next.js App Router pages and layouts
+│   │   ├── (auth)/      # Authentication routes (Login)
+│   │   ├── advisor/     # Advisor portal (Inbox, Clients)
+│   │   ├── api/         # Next.js API Routes (Trpc/REST)
+│   │   └── docs/        # Fumadocs Developer Portal
+│   ├── components/      # Reusable React components (UI + Domain)
+│   ├── lib/             # Pure utility functions and configurations
+│   │   └── financial-engine/ # Decoupled Indian tax and investment logic
+│   └── styles/          # Tailwind V4 global CSS
+└── tests/               # Unit and integration tests
+```
+
+## Core Architectural Decisions
+
+### 1. Decoupled Financial Engine (`lib/financial-engine`)
+
+Due to the complexity of the Indian financial ecosystem (Old vs. New Tax Regimes, EPF, PPF, NPS rules), **financial logic is strictly decoupled from UI components**.
+- All calculations reside in `lib/financial-engine` as pure, testable functions.
+- Every calculator must have corresponding unit tests in the `tests/` directory to prevent regressions.
+- Tax slabs and limits are abstracted into configurable constants to allow easy updates after annual Union Budgets without rewriting business logic.
+
+### 2. State Management
+
+For complex user financial plans and scenarios, the application relies on **Zustand**. This provides a lightweight, unopinionated way to manage deep nested state for retirement scenarios.
+
+### 3. Database & ORM
+
+The project uses **Prisma ORM** with SQLite for local development and edge compatibility. It manages:
+- **User Authentication:** NextAuth.js standard schema.
+- **Advisor CRM:** Linking advisors to multiple client plans and tracking inbox tasks.
+
+### 4. Precision Mathematics
+
+Floating-point errors are unacceptable in financial applications. Calculations use precision math strategies (e.g., handling currency in *paise* or using `decimal.js`) to ensure Indian numbering formats (Lakhs, Crores) remain accurate.
+
+### 5. AI Integration
+
+The `docs/ai_context.md` file is actively maintained to serve as the ground truth for any AI agents working on the repository, ensuring they understand the unique domain constraints of the Indian financial system.

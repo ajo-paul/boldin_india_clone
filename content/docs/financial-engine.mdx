@@ -1,0 +1,56 @@
+---
+title: Financial Engine
+description: Core API reference for the Indian Financial Engine.
+---
+
+## Overview
+
+The `lib/financial-engine` module is the backbone of the Boldin India Clone. It strictly separates complex Indian financial logic from the React UI, ensuring precision and testability. 
+
+### Why a Decoupled Engine?
+Indian tax laws and investment rules change annually (e.g., Union Budget announcements). By centralizing this logic, we ensure:
+1. UI components remain stateless and fast.
+2. We can unit-test edge cases without mounting a browser.
+3. Rates and brackets can be easily updated via configuration files without code rewrites.
+
+---
+
+## Core Modules
+
+### 1. Taxation Engine
+Calculates income tax liabilities under both the **Old Tax Regime** and the **New Tax Regime**.
+
+**Features:**
+- Standard Deduction applicability.
+- 80C, 80D, and 80CCD(1B) deduction parsing (Old Regime).
+- Surcharge and Cess calculations based on income brackets.
+- Marginal relief logic for incomes crossing surcharge thresholds.
+
+### 2. Retirement Instruments
+Pure functions modeling the growth and withdrawal rules of Indian retirement assets.
+
+#### EPF (Employee Provident Fund)
+- Tracks employer (12%) and employee (12%) contributions.
+- Calculates compound interest based on prevailing annual rates.
+- Handles tax-free maturity rules.
+
+#### PPF (Public Provident Fund)
+- Enforces the ₹1.5L annual maximum contribution limit.
+- Projects growth over the mandatory 15-year lock-in period.
+- EEE (Exempt-Exempt-Exempt) tax status modeling.
+
+#### NPS (National Pension System)
+- Market-linked return modeling based on user equity/debt choices.
+- Handles the mandatory age-60 withdrawal rules (60% lump sum tax-free, 40% mandatory annuity).
+
+### 3. Hybrid Investment Modeling
+Supports a progressive disclosure model for user onboarding:
+- **Phase 1 (Buckets):** Users input total assets (e.g., Total Equity, Total FDs). The engine applies historical average returns.
+- **Phase 2 (Granular):** Power users define specific ISINs, exact FD interest rates, and maturity dates for highly accurate projections.
+
+---
+
+## Best Practices
+1. **Never Hardcode Rates:** All tax brackets and interest rates must be passed as parameters or fetched from a unified config object.
+2. **Strict Typing:** All monetary inputs and outputs must use strict TypeScript types (e.g., `number` representing INR or `Decimal` objects).
+3. **Avoid Floating Point Errors:** For precise calculations, utilize a library like `decimal.js` rather than native JavaScript `Number` math for compounding.
