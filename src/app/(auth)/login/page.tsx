@@ -23,10 +23,8 @@ export default function LoginPage() {
     setIsEmailLoading(false);
   };
 
-  const handleDevLogin = async () => {
-    setIsEmailLoading(true);
-    await signIn("credentials", { email: "dev@boldin.local", callbackUrl: "/overview" });
-    setIsEmailLoading(false);
+  const handleDevLogin = () => {
+    window.location.href = "/onboarding";
   };
 
   return (

@@ -1,23 +1,23 @@
 @import "tailwindcss";
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
 
-  /* Primary: Neutral Green (Growth) */
-  --color-primary-50: #f0fdf4;
-  --color-primary-100: #dcfce7;
-  --color-primary-200: #bbf7d0;
-  --color-primary-300: #86efac;
-  --color-primary-400: #4ade80;
-  --color-primary-500: #22c55e;
-  --color-primary-600: #16a34a;
-  --color-primary-700: #15803d;
-  --color-primary-800: #166534;
-  --color-primary-900: #14532d;
-  --color-primary-950: #052e16;
+  /* Primary: Boldin Teal (#17748B) */
+  --color-primary-50: #f0f9fa;
+  --color-primary-100: #dbf0f4;
+  --color-primary-200: #bde1e8;
+  --color-primary-300: #90cbda;
+  --color-primary-400: #5cadc0;
+  --color-primary-500: #3d90a7;
+  --color-primary-600: #17748B;
+  --color-primary-700: #265d6f;
+  --color-primary-800: #244d5c;
+  --color-primary-900: #21414e;
+  --color-primary-950: #122a34;
   --color-primary: var(--color-primary-600);
   --color-primary-foreground: #ffffff;
 
@@ -35,25 +35,26 @@
   --color-negative-950: #4c0519;
   --color-negative: var(--color-negative-500);
 
-  --font-sans: var(--font-inter);
+  --font-sans: 'ESKlarheitGrotesk', 'Proxima Nova', var(--font-inter), sans-serif;
   
   /* Custom large-radius, soft drop shadow for borderless cards */
-  --shadow-card: 0 10px 40px -10px rgba(0,0,0,0.08);
+  --shadow-card: 0 4px 20px -2px rgba(0,0,0,0.05);
 }
 
-:root {
-  --background: #f9fafb; /* Light gray background to make cards pop */
-  --foreground: #111827; /* Near black */
-  --card: #ffffff;
-  --card-foreground: #111827;
+:root, .dark, [data-theme="dark"], [data-mode="dark"] {
+  --background: #f7f9fa !important; /* Very subtle cool gray to make white cards pop */
+  --foreground: rgba(0, 0, 0, 0.873) !important; /* Boldin exact text color */
+  --card: #ffffff !important;
+  --card-foreground: rgba(0, 0, 0, 0.873) !important;
 }
 
+/* Force light mode to match Boldin archive for system preference too */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f172a; /* Slate 900 */
-    --foreground: #f8fafc; /* Slate 50 */
-    --card: #1e293b; /* Slate 800 */
-    --card-foreground: #f8fafc;
+  :root, .dark, [data-theme="dark"], [data-mode="dark"] {
+    --background: #f7f9fa !important;
+    --foreground: rgba(0, 0, 0, 0.873) !important;
+    --card: #ffffff !important;
+    --card-foreground: rgba(0, 0, 0, 0.873) !important;
   }
 }
 

@@ -41,3 +41,10 @@ boldin_archive/f*.txt
 boldin_archive/css2*
 boldin_archive/*-*.js
 boldin_archive/*-*.html
+
+# Build, runtime & OS artifacts
+.venv/
+__pycache__/
+*.pyc
+.wrangler/
+dist/

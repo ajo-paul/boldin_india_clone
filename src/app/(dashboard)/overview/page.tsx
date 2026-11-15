@@ -15,12 +15,13 @@ const rules = getFinancialRulesSync();
 export default function OverviewPage() {
   const assets = usePortfolioStore((state) => state.assets);
   const isHydrated = usePortfolioStore((state) => state.isHydrated);
+  const userProfile = usePortfolioStore((state) => state.userProfile);
 
   const { chartData, currentNetWorth } = useMemo(() => {
     let currentNW = 0;
     const aggregatedProjections: Record<number, { wealth: number; target: number }> = {};
-    const CURRENT_AGE = 30; // Hardcoded for demo, would come from user profile
-    const RETIREMENT_AGE = 60;
+    const CURRENT_AGE = userProfile.currentAge;
+    const RETIREMENT_AGE = userProfile.retirementAge;
     
     // Initialize aggregated projections
     for (let age = CURRENT_AGE; age <= RETIREMENT_AGE; age++) {
@@ -28,7 +29,12 @@ export default function OverviewPage() {
     }
 
     if (!isHydrated || assets.length === 0) {
-      // Return empty chart or default structure if no assets
+      // Create a dummy target line even if there are no assets
+      let target = userProfile.monthlyIncome * 10;
+      for (let age = CURRENT_AGE; age <= RETIREMENT_AGE; age++) {
+        aggregatedProjections[age].target = Math.round(target);
+        target = target * 1.0825 + (userProfile.monthlyIncome * 0.2 * 12);
+      }
       return { 
         chartData: Object.entries(aggregatedProjections).map(([age, data]) => ({ age: Number(age), ...data })), 
         currentNetWorth: 0 
@@ -97,11 +103,11 @@ export default function OverviewPage() {
       });
     });
 
-    // Calculate a dummy target
-    let target = currentNW || 1500000;
+    // Calculate a target corpus based on user profile
+    let target = currentNW || (userProfile.monthlyIncome * 10);
     for (let age = CURRENT_AGE; age <= RETIREMENT_AGE; age++) {
       aggregatedProjections[age].target = Math.round(target);
-      target = target * 1.0825 + 320000;
+      target = target * 1.0825 + (userProfile.monthlyIncome * 0.2 * 12);
     }
 
     const dataArray = Object.entries(aggregatedProjections).map(([age, data]) => ({
@@ -111,7 +117,7 @@ export default function OverviewPage() {
     }));
 
     return { chartData: dataArray, currentNetWorth: currentNW };
-  }, [assets, isHydrated]);
+  }, [assets, isHydrated, userProfile]);
 
   const targetCorpus = chartData.length > 0 ? chartData[chartData.length - 1].target : 0;
 
@@ -119,10 +125,10 @@ export default function OverviewPage() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Your Financial Overview</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Your Financial Overview</h1>
           <p className="text-gray-500 mt-1">Here is how your Indian retirement is shaping up.</p>
         </div>
-        <div className="flex items-center gap-3 bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 px-4 py-2 rounded-full border border-primary-100 dark:border-primary-800 font-medium">
+        <div className="flex items-center gap-3 bg-primary-50 text-primary-700 px-4 py-2 rounded-full border border-primary-100 font-medium">
           <Icon name="workspace_premium" />
           Retirement Score: {currentNetWorth > 0 ? '82/100' : '0/100'}
         </div>
@@ -130,31 +136,31 @@ export default function OverviewPage() {
 
       {/* Top Metrics Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="flex flex-col">
+        <Card className="flex flex-col bg-white border border-gray-100">
           <div className="flex items-center gap-2 text-gray-500 mb-2">
             <Icon name="account_balance_wallet" className="text-lg" />
             <h3 className="font-medium">Current Net Worth</h3>
           </div>
-          <span className="text-4xl font-bold">₹{(currentNetWorth / 100000).toFixed(2)}L</span>
-          <div className="mt-4 flex items-center text-sm text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 w-max px-2 py-1 rounded">
+          <span className="text-4xl font-bold text-gray-900">₹{(currentNetWorth / 100000).toFixed(2)}L</span>
+          <div className="mt-4 flex items-center text-sm text-primary-600 bg-primary-50 w-max px-2 py-1 rounded">
             <Icon name="trending_up" className="text-sm mr-1" />
             +12% this year
           </div>
         </Card>
 
-        <Card className="flex flex-col">
+        <Card className="flex flex-col bg-white border border-gray-100">
           <div className="flex items-center gap-2 text-gray-500 mb-2">
             <Icon name="flag" className="text-lg" />
-            <h3 className="font-medium">Target Corpus (Age 60)</h3>
+            <h3 className="font-medium">Target Corpus (Age {userProfile.retirementAge})</h3>
           </div>
-          <span className="text-4xl font-bold">₹{(targetCorpus / 10000000).toFixed(2)} Cr</span>
+          <span className="text-4xl font-bold text-gray-900">₹{(targetCorpus / 10000000).toFixed(2)} Cr</span>
           <div className="mt-4 flex items-center text-sm text-gray-500">
             Inflation adjusted at 6%
           </div>
         </Card>
 
-        <Card className="flex flex-col bg-slate-900 text-white dark:bg-slate-800 border border-slate-800">
-          <div className="flex items-center gap-2 text-slate-400 mb-2">
+        <Card className="flex flex-col bg-gray-900 text-white border border-gray-800">
+          <div className="flex items-center gap-2 text-gray-400 mb-2">
             <Icon name="tips_and_updates" className="text-lg" />
             <h3 className="font-medium">Action Item</h3>
           </div>
@@ -168,35 +174,35 @@ export default function OverviewPage() {
       </div>
 
       {/* Main Chart Area */}
-      <Card className="h-[500px] flex flex-col">
-        <h3 className="text-xl font-bold mb-6">Wealth Projection</h3>
+      <Card className="h-[500px] flex flex-col bg-white border border-gray-100">
+        <h3 className="text-xl font-bold mb-6 text-gray-900">Wealth Projection</h3>
         <div className="flex-1 w-full min-h-0">
-          {chartData.length > 0 && chartData[0].wealth > 0 ? (
+          {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorWealth" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#16a34a" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#16a34a" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#17748B" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#17748B" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" opacity={0.2} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                 <XAxis 
                   dataKey="age" 
                   tickLine={false} 
                   axisLine={false} 
-                  tick={{ fill: '#64748b' }} 
+                  tick={{ fill: '#64748b', fontSize: 12 }} 
                   dy={10}
                   tickFormatter={(value) => `Age ${value}`}
                 />
                 <YAxis 
                   tickLine={false} 
                   axisLine={false} 
-                  tick={{ fill: '#64748b' }} 
+                  tick={{ fill: '#64748b', fontSize: 12 }} 
                   tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`}
                 />
                 <Tooltip 
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 40px -10px rgba(0,0,0,0.2)' }}
+                  contentStyle={{ borderRadius: '12px', border: '1px solid #f1f5f9', boxShadow: '0 10px 40px -10px rgba(0,0,0,0.1)' }}
                   formatter={(value: any) => [`₹${(Number(value) / 100000).toFixed(2)} Lakhs`, '']}
                   labelFormatter={(label) => `At Age ${label}`}
                 />
@@ -204,7 +210,7 @@ export default function OverviewPage() {
                   type="monotone" 
                   dataKey="wealth" 
                   name="Projected Wealth"
-                  stroke="#16a34a" 
+                  stroke="#17748B" 
                   strokeWidth={3}
                   fillOpacity={1} 
                   fill="url(#colorWealth)" 
@@ -231,23 +237,23 @@ export default function OverviewPage() {
 
       {/* Gamification / Milestones */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="flex items-start gap-4 bg-gradient-to-br from-primary-50 to-white dark:from-primary-950 dark:to-slate-900 border border-primary-100 dark:border-primary-900">
-          <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-sm text-2xl">
+        <Card className="flex items-start gap-4 bg-gradient-to-br from-primary-50 to-white border border-primary-100">
+          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-2xl">
             🎉
           </div>
           <div>
-            <h4 className="font-bold text-lg">Milestone Reached!</h4>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">You crossed ₹10 Lakhs in Mutual Funds. You are in the top 15% of your age bracket in Bangalore.</p>
+            <h4 className="font-bold text-lg text-gray-900">Milestone Reached!</h4>
+            <p className="text-gray-600 mt-1">You crossed ₹10 Lakhs in Mutual Funds. You are in the top 15% of your age bracket in Bangalore.</p>
           </div>
         </Card>
 
-        <Card className="flex items-start gap-4">
-          <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 rounded-full flex items-center justify-center shadow-sm">
+        <Card className="flex items-start gap-4 bg-white border border-gray-100">
+          <div className="w-12 h-12 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center shadow-sm">
             <Icon name="military_tech" className="text-2xl" />
           </div>
           <div>
-            <h4 className="font-bold text-lg">Tax Optimizer Badge</h4>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">Earned for successfully mapping out Old vs New regime limits.</p>
+            <h4 className="font-bold text-lg text-gray-900">Tax Optimizer Badge</h4>
+            <p className="text-gray-600 mt-1">Earned for successfully mapping out Old vs New regime limits.</p>
           </div>
         </Card>
       </div>

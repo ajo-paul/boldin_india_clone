@@ -11,13 +11,13 @@ function getAssetIcon(assetClass: string) {
   switch (assetClass) {
     case 'EPF':
     case 'PPF':
-      return { name: 'assured_workload', color: 'text-primary-600 dark:text-primary-400', bg: 'bg-primary-100 dark:bg-primary-900' };
+      return { name: 'assured_workload', color: 'text-primary-600', bg: 'bg-primary-100' };
     case 'MUTUAL_FUND':
-      return { name: 'candlestick_chart', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-100 dark:bg-blue-900' };
+      return { name: 'candlestick_chart', color: 'text-blue-600', bg: 'bg-blue-100' };
     case 'NPS':
-      return { name: 'account_balance', color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-100 dark:bg-purple-900' };
+      return { name: 'account_balance', color: 'text-purple-600', bg: 'bg-purple-100' };
     default:
-      return { name: 'savings', color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-100 dark:bg-amber-900' };
+      return { name: 'savings', color: 'text-amber-600', bg: 'bg-amber-100' };
   }
 }
 
@@ -55,7 +55,7 @@ export default function IncomePage() {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Income & Savings</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Income & Savings</h1>
         <p className="text-gray-500 mt-1">Manage your active income streams and investment portfolio.</p>
       </div>
 
@@ -63,21 +63,21 @@ export default function IncomePage() {
         
         {/* Left Column: Forms */}
         <div className="lg:col-span-2 space-y-6">
-          <Card>
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-slate-800">
+          <Card className="bg-white border border-gray-100">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
               <Icon name="work" className="text-primary-600 text-2xl" />
-              <h2 className="text-xl font-bold">Primary Income</h2>
+              <h2 className="text-xl font-bold text-gray-900">Primary Income</h2>
             </div>
             
             <form className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Annual Basic Salary (₹)</label>
-                  <input type="number" className="w-full h-11 px-4 rounded-xl border border-gray-200 dark:border-slate-700 dark:bg-slate-900" placeholder="e.g. 1200000" />
+                  <label className="block text-sm font-medium mb-1 text-gray-700">Annual Basic Salary (₹)</label>
+                  <input type="number" className="w-full h-11 px-4 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all text-gray-900" placeholder="e.g. 1200000" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Annual Allowances (₹)</label>
-                  <input type="number" className="w-full h-11 px-4 rounded-xl border border-gray-200 dark:border-slate-700 dark:bg-slate-900" placeholder="e.g. 300000" />
+                  <label className="block text-sm font-medium mb-1 text-gray-700">Annual Allowances (₹)</label>
+                  <input type="number" className="w-full h-11 px-4 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all text-gray-900" placeholder="e.g. 300000" />
                 </div>
               </div>
               <div className="pt-2">
@@ -86,17 +86,17 @@ export default function IncomePage() {
             </form>
           </Card>
 
-          <Card>
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-slate-800">
+          <Card className="bg-white border border-gray-100">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
               <Icon name="account_balance" className="text-primary-600 text-2xl" />
-              <h2 className="text-xl font-bold">Add Manual Asset</h2>
+              <h2 className="text-xl font-bold text-gray-900">Add Manual Asset</h2>
             </div>
             
             <form id="asset-form" action={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Asset Class</label>
-                  <select name="asset_class" className="w-full h-11 px-4 rounded-xl border border-gray-200 dark:border-slate-700 dark:bg-slate-900">
+                  <label className="block text-sm font-medium mb-1 text-gray-700">Asset Class</label>
+                  <select name="asset_class" className="w-full h-11 px-4 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all text-gray-900 bg-white">
                     <option value="EPF">EPF (Employee Provident Fund)</option>
                     <option value="PPF">PPF (Public Provident Fund)</option>
                     <option value="NPS">NPS (National Pension System)</option>
@@ -105,16 +105,16 @@ export default function IncomePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Institution Name</label>
-                  <input name="institution_name" type="text" className="w-full h-11 px-4 rounded-xl border border-gray-200 dark:border-slate-700 dark:bg-slate-900" placeholder="e.g. EPFO, SBI, Zerodha" />
+                  <label className="block text-sm font-medium mb-1 text-gray-700">Institution Name</label>
+                  <input name="institution_name" type="text" className="w-full h-11 px-4 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all text-gray-900" placeholder="e.g. EPFO, SBI, Zerodha" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Current Value (₹)</label>
-                  <input name="current_value" type="number" required className="w-full h-11 px-4 rounded-xl border border-gray-200 dark:border-slate-700 dark:bg-slate-900" placeholder="0" />
+                  <label className="block text-sm font-medium mb-1 text-gray-700">Current Value (₹)</label>
+                  <input name="current_value" type="number" required className="w-full h-11 px-4 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all text-gray-900" placeholder="0" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Monthly Contribution (₹)</label>
-                  <input name="monthly_contribution" type="number" className="w-full h-11 px-4 rounded-xl border border-gray-200 dark:border-slate-700 dark:bg-slate-900" placeholder="0" />
+                  <label className="block text-sm font-medium mb-1 text-gray-700">Monthly Contribution (₹)</label>
+                  <input name="monthly_contribution" type="number" className="w-full h-11 px-4 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all text-gray-900" placeholder="0" />
                 </div>
               </div>
               <div className="pt-2">
@@ -128,20 +128,20 @@ export default function IncomePage() {
 
         {/* Right Column: Existing Assets */}
         <div className="space-y-6">
-          <Card className="bg-slate-900 text-white dark:bg-slate-800 border border-slate-800">
+          <Card className="bg-gray-900 text-white border border-gray-800">
             <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
               <Icon name="mail" className="text-primary-400" /> Auto-Sync Magic Link
             </h3>
-            <p className="text-sm text-slate-400 mb-4">
+            <p className="text-sm text-gray-400 mb-4">
               Forward your CAMS/KFintech CAS statement to your secure magic email to auto-sync mutual funds.
             </p>
-            <div className="bg-slate-950 p-3 rounded-lg border border-slate-700 text-xs font-mono text-center overflow-x-auto">
+            <div className="bg-gray-950 p-3 rounded-lg border border-gray-700 text-xs font-mono text-center overflow-x-auto text-primary-300">
               sync-uid829@inbound.boldin.in
             </div>
           </Card>
 
-          <Card>
-            <h3 className="font-bold mb-4">Your Portfolio</h3>
+          <Card className="bg-white border border-gray-100">
+            <h3 className="font-bold mb-4 text-gray-900">Your Portfolio</h3>
             
             <div className="space-y-4">
               {!isHydrated ? (
@@ -152,18 +152,18 @@ export default function IncomePage() {
                 assets.map((asset, i) => {
                   const iconStyle = getAssetIcon(asset.asset_class);
                   return (
-                    <div key={asset.id || i} className="flex items-center justify-between p-3 rounded-xl border border-gray-100 dark:border-slate-700">
+                    <div key={asset.id || i} className="flex items-center justify-between p-3 rounded-xl border border-gray-100 bg-gray-50">
                       <div className="flex items-center gap-3">
                         <div className={`w-10 h-10 rounded-full ${iconStyle.bg} flex items-center justify-center ${iconStyle.color}`}>
                           <Icon name={iconStyle.name} />
                         </div>
                         <div>
-                          <p className="font-medium">{asset.asset_class} Balance</p>
+                          <p className="font-medium text-gray-900">{asset.asset_class} Balance</p>
                           <p className="text-xs text-gray-500">{asset.institution_name}</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-bold">₹{asset.current_value.toLocaleString('en-IN')}</p>
+                        <p className="font-bold text-gray-900">₹{asset.current_value.toLocaleString('en-IN')}</p>
                       </div>
                     </div>
                   );

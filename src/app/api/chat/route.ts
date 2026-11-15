@@ -6,7 +6,7 @@ import { getFinancialRulesSync } from '@/lib/financial-engine/rules';
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages, portfolioContext } = await req.json();
 
   // Inject context for Gemini
   const rules = getFinancialRulesSync();
@@ -14,6 +14,9 @@ export async function POST(req: Request) {
     You are Boldin AI, an expert financial assistant for Indian users.
     Current Financial Rules Context:
     ${JSON.stringify(rules)}
+    
+    User Portfolio Context:
+    ${portfolioContext || "No portfolio data provided."}
     
     Guidelines:
     1. Always prefer giving answers in the context of the New Tax Regime vs Old Tax Regime.

@@ -19,9 +19,9 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 border-r border-gray-200 dark:border-slate-800 bg-card text-card-foreground flex flex-col h-screen fixed top-0 left-0">
+    <aside className="w-64 border-r border-gray-200 bg-white text-card-foreground flex flex-col h-screen fixed top-0 left-0">
       <div className="p-6">
-        <Link href="/overview" className="flex items-center gap-2 font-bold text-xl">
+        <Link href="/overview" className="flex items-center gap-2 font-bold text-xl text-gray-900">
           <Icon name="trending_up" className="text-primary-600" />
           Boldin India
         </Link>
@@ -36,23 +36,23 @@ export function Sidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-medium ${
                 isActive 
-                  ? "bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" 
-                  : "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-slate-800"
+                  ? "bg-primary-50 text-primary-700 font-bold" 
+                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
             >
-              <Icon name={item.icon} className={isActive ? "" : "text-gray-400 dark:text-gray-500"} />
+              <Icon name={item.icon} className={isActive ? "text-primary-600" : "text-gray-400"} />
               {item.name}
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-4 border-t border-gray-200 dark:border-slate-800">
+      <div className="p-4 border-t border-gray-200">
         <button
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="flex items-center gap-3 px-4 py-3 w-full text-left rounded-xl transition-colors font-medium text-gray-600 hover:bg-negative-50 hover:text-negative-600 dark:text-gray-400 dark:hover:bg-negative-900/30 dark:hover:text-negative-400"
+          className="flex items-center gap-3 px-4 py-3 w-full text-left rounded-xl transition-colors font-medium text-gray-600 hover:bg-negative-50 hover:text-negative-600"
         >
-          <Icon name="logout" className="text-gray-400 dark:text-gray-500 group-hover:text-negative-500" />
+          <Icon name="logout" className="text-gray-400 group-hover:text-negative-500" />
           Log out
         </button>
       </div>
